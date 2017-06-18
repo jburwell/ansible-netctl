@@ -1,0 +1,7 @@
+Description='WiFi profile managed by Ansible'
+Interface={{ netctl_wifi_interface }}
+Connection=wireless
+Security=wpa
+ESSID={{ netctl_wifi_ssid }}
+IP=dhcp
+Key=\"{{ netctl_wifi_key }}

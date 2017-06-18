@@ -1,0 +1,40 @@
+---
+# Wired
+- name: Ensure network packages are present
+  pacman: "name={{ item }} state=present"
+  with_items:
+    - ifplugd
+
+- name: "Ensure ifplugd for {{ netctl_wired_interface }} is active"
+  service: "name=netctl-ifplugd@{{ netctl_wired_interface }} state=started enabled=yes"
+  when: "wired_interface != ''"
+
+# WiFi
+- name: Ensure wireless packages are present
+  pacman: "name={{ item }} state=present"
+  with_items:
+    - dialog
+    - wpa_actiond
+  when: "netctl_enable_wifi and netctl_wifi_interface != ''"
+
+- name: Copy modprobe.d config file for 8192cu
+  template:
+    src: 8192cu.conf.j2
+    dest: /etc/modprobe.d/8192cu.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: "netctl_enable_wifi and netctl_wifi_interface != '' and netctl_wifi_driver == '8192cu'"
+
+- name: "Copy {{netctl_wifi_interface}}-{{ netctl_wifi_ssid }} wireless profile"
+  template:
+    src: "wifi.j2"
+    dest: "/etc/netctl/{{ netctl_wifi_interface }}-{{ netctl_wifi_ssid }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: "netctl_enable_wifi and wireless_interface != ''"
+
+- name: Ensure wifi interface is enabled.
+  service: "name=netctl-auto@{{ wireless_interface }} state={% if network_enable_wireless %}started{% else %}stopped{% endif %} enabled={% if netctl_enable_wifi %}yes{% else %}no{% endif %}"
+  when: "netctl_enable_wifi and wireless_interface != ''"
