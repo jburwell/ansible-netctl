@@ -7,7 +7,7 @@
 
 - name: "Ensure ifplugd for {{ netctl_wired_interface }} is active"
   service: "name=netctl-ifplugd@{{ netctl_wired_interface }} state=started enabled=yes"
-  when: "wired_interface != ''"
+  when: "netctl_wired_interface != ''"
 
 # WiFi
 - name: Ensure wireless packages are present
@@ -33,8 +33,8 @@
     owner: root
     group: root
     mode: 0644
-  when: "netctl_enable_wifi and wireless_interface != '' and netctl_enable_default_wifi_profile"
+  when: "netctl_enable_wifi and netctl_wireless_interface != '' and netctl_enable_default_wifi_profile"
 
 - name: Ensure wifi interface is enabled.
-  service: "name=netctl-auto@{{ wireless_interface }} state={% if network_enable_wireless %}started{% else %}stopped{% endif %} enabled={% if netctl_enable_wifi %}yes{% else %}no{% endif %}"
-  when: "netctl_enable_wifi and wireless_interface != ''"
+  service: "name=netctl-auto@{{ netctl_wireless_interface }} state={% if netctl_enable_wifi %}started{% else %}stopped{% endif %} enabled={% if netctl_enable_wifi %}yes{% else %}no{% endif %}"
+  when: "netctl_enable_wifi and netctl_wireless_interface != ''"
