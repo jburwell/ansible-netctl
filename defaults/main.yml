@@ -1,6 +1,7 @@
 ---
 netctl_wired_interface: 'eth0'
 netctl_enable_wifi: true # Optionally set to false to disable even if wireless_interface is defined
+netctl_enable_default_wifi_profile: false
 netctl_wifi_interface: '' # Simply set this variable wherever you want to configure wireless automatically
 netctl_wifi_ssid: DEnet4
 netctl_wifi_key: 'c1b8b25411ba34d8236c7326c40807eeedeff5b2c55c21b0444d058b97fd9d8b'
