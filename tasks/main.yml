@@ -26,15 +26,15 @@
     mode: 0644
   when: "netctl_enable_wifi and netctl_wifi_interface != '' and netctl_wifi_driver == '8192cu'"
 
-- name: "Copy {{netctl_wifi_interface}} wireless profile"
+- name: "Copy wireless profile"
   template:
     src: "wifi.j2"
     dest: "/etc/netctl/{{ netctl_wifi_interface }}"
     owner: root
     group: root
     mode: 0644
-  when: "netctl_enable_wifi and netctl_wireless_interface != '' and netctl_enable_default_wifi_profile"
+  when: "netctl_enable_wifi and netctl_wifi_interface != '' and netctl_enable_default_wifi_profile"
 
 - name: Ensure wifi interface is enabled.
-  service: "name=netctl-auto@{{ netctl_wireless_interface }} state={% if netctl_enable_wifi %}started{% else %}stopped{% endif %} enabled={% if netctl_enable_wifi %}yes{% else %}no{% endif %}"
-  when: "netctl_enable_wifi and netctl_wireless_interface != ''"
+  service: "name=netctl-auto@{{ netctl_wifi_interface }} state={% if netctl_enable_wifi %}started{% else %}stopped{% endif %} enabled={% if netctl_enable_wifi %}yes{% else %}no{% endif %}"
+  when: "netctl_enable_wifi and netctl_wifi_interface != ''"
