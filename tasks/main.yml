@@ -12,7 +12,7 @@
     name: "netctl-ifplugd@{{ netctl_wired_interface }}"
     state: started
     enabled: true
-  when: netctl_wired_interface
+  when: netctl_wired_interface is defined
 
 - include: configure_wifi.yml
-  when: netctl_enable_wifi amd netctl_wifi_interface
+  when: netctl_enable_wifi and netctl_wifi_interface is defined
