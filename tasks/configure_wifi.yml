@@ -1,0 +1,33 @@
+---
+
+- name: Ensure wireless packages are present
+  pacman: 
+    name: {{ item }}
+    state: present
+  with_items:
+    - dialog
+    - wpa_actiond
+
+- name: Copy modprobe.d config file for 8192cu
+  template:
+    src: 8192cu.conf.j2
+    dest: /etc/modprobe.d/8192cu.conf
+    owner: root
+    group: root
+    mode: 0644
+  when: netctl_wifi_driver == "8192cu"
+
+- name: Copy wireless profile
+  template:
+    src: "wifi.j2"
+    dest: "/etc/netctl/{{ netctl_wifi_interface }}"
+    owner: root
+    group: root
+    mode: 0644
+  when: netctl_enable_default_wifi_profile
+
+- name: Ensure wifi interface is enabled.
+  service: 
+    name: "netctl-auto@{{ netctl_wifi_interface }}"
+    state: started
+    enabled: true
